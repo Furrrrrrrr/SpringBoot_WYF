@@ -3,45 +3,77 @@ package com.vash.highlight_spring4.ch2.el;
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.core.env.Environment;
 import org.springframework.core.io.Resource;
-import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 
 
-@Component
+/**
+ * 注入配置配件使用@PropertySource()指定文件地址，若使用@Value()注入，则要配置一个propertySourcesPlaceholderConfigurer
+ * todo 上面的configurer没有@Bean注入，依然可以运行
+ * todo 注意 # $
+ * 注入Properties还可以从Environment中获取
+ * <p>
+ * todo properties文件需要放在resources目录下，而不是java目录下，否则会报错，文件找不到
+ * todo txt文件是否也要在resources下没测试
+ */
+@Configuration
 @ComponentScan("com.vash.highlight_spring4.ch2.el")
-@PropertySource("classpath:com/vash/highlight_spring4/ch2/el/test.properties")
+@PropertySource("classpath:test.properties")
 public class ElConfig {
 
+    /**
+     * 注入普通字符
+     */
     @Value("normal String")
     private String normal;
 
+    /**
+     * 注入操作系统属性
+     */
     @Value("#{systemProperties['os.name']}")
     private String osName;
 
+    /**
+     * 注入表达式结果
+     */
     @Value("#{T(java.lang.Math).random() * 100.0}")
     private double randomNumber;
 
-    @Value("#{demoService.another}")
+    /**
+     * 注入其他bean属性
+     */
+    @Value("#{demoService.value}")
     private String fromAnother;
 
-    @Value("classpath:com/vash/highlight_spring4/ch2/el/test.txt")
+    /**
+     * 注入文件资源
+     */
+    @Value("classpath:test.txt")
     private Resource testFile;
 
+    /**
+     * 注入网址资源
+     */
     @Value("https://www.baidu.com")
     private Resource testUrl;
 
+    /**
+     * 注入配置文件
+     */
     @Value("${demo.name}")
     private String demoName;
 
     @Autowired
     private Environment environment;
 
+    @Bean
     public static PropertySourcesPlaceholderConfigurer propertySourcesPlaceholderConfigurer() {
         return new PropertySourcesPlaceholderConfigurer();
     }
