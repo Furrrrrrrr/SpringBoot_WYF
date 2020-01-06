@@ -1,9 +1,12 @@
 package com.vash.highlight_spring4.ch1.di;
 
 import org.springframework.context.annotation.ComponentScan;
-import org.springframework.stereotype.Component;
+import org.springframework.context.annotation.Configuration;
 
-@Component
+/**
+ * 此处用@Component也可以
+ */
+@Configuration
 @ComponentScan("com.vash.highlight_spring4.ch1.di")
 public class DiConfig {
 }
